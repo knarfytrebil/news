@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300&display=swap" rel="stylesheet">
+        <script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-rss/3.3.0/jquery.rss.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    </head>
+    <style> 
+        html { background-color: black; } 
+        body { margin: 0px; }
+        #time_display {
+            font-size: 20pt;
+            font-family: 'Oxanium', cursive;
+            display: block;
+            text-align: right;
+            position: absolute;
+            width: 100%;
+            top: 5px; 
+            right: 5px;
+            color: gray;
+        }
+        .feed-container p { margin: 0px; }
+        .feed-container p b { color: #5e5e5e; }
+        .feed-container a { text-decoration: aqua; }
+        .feed-container a:link { color: gray; }
+        .feed-container a:visited { color: #5e5e5e; }
+        .rss-feeds { font-family: 'Oxanium', cursive; margin: 20px; font-size:15px; }
+        .rss_block .title {
+            color: gray;
+            font-family: 'Oxanium', cursive;
+            margin: 20px;
+        }
+    </style> 
+    <body>
+        <div id="time_display">loading...</div> 
+        <div class="rss_block">
+            <p class="title"> > Yahoo Japan Main </p>
+            <div class="rss-feeds" id="yahoo_jp_main"></div>
+        </div>
+        <div class="rss_block">
+            <p class="title"> > Yahoo Japan Domestic </p>
+            <div class="rss-feeds" id="yahoo_jp_domestic"></div>
+        </div>
+        <div class="rss_block">
+            <p class="title"> > Yahoo Japan International </p>
+            <div class="rss-feeds" id="yahoo_jp_international"></div>
+        </div>
+        <div class="rss_block">
+            <p class="title"> > Solidot </p>
+            <div class="rss-feeds" id="solidot"></div>
+        </div>
+
+    </body>
+    <script>
+    var tVar;
+    var feedoptions = {
+        limit: 10,
+        layoutTemplate: "<div class='feed-container'>{entries}</div>",
+        entryTemplate: "<p><b>[{date}]</b> <a href='{url}'>{title}</a></p>",
+        dateFormat: "MMMM Do YYYY, HH:mm:ss",
+    };
+    function tFunc() {
+        tVar = setInterval(intFunc, 1000);
+    }
+    function intFunc() {
+        document.getElementById("time_display").innerHTML = Date().toString();
+    }
+    jQuery(function($) {
+        $("#yahoo_jp_main").rss("http://feeds.feedburner.com/co/ySlM", feedoptions);
+        $("#yahoo_jp_domestic").rss("http://feeds.feedburner.com/co/GMei", feedoptions);
+        $("#yahoo_jp_international").rss("http://feeds.feedburner.com/co/mrPo", feedoptions);
+        $("#solidot").rss("http://feeds.feedburner.com/solidot/ddYU", feedoptions);
+    });
+    intFunc();
+    tFunc();
+    </script>
+</html>
