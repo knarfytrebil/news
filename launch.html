@@ -67,10 +67,10 @@
         document.getElementById("time_display").innerHTML = Date().toString();
     }
     jQuery(function($) {
-        $("#yahoo_jp_main").rss("https://feeds.feedburner.com/co/ySlM", feedoptions);
-        $("#yahoo_jp_domestic").rss("https://feeds.feedburner.com/co/GMei", feedoptions);
-        $("#yahoo_jp_international").rss("https://feeds.feedburner.com/co/mrPo", feedoptions);
-        $("#solidot").rss("https://feeds.feedburner.com/solidot/ddYU", feedoptions);
+        $("#yahoo_jp_main").rss("https://news.yahoo.co.jp/pickup/rss.xml", feedoptions);
+        $("#yahoo_jp_domestic").rss("https://news.yahoo.co.jp/pickup/domestic/rss.xml", feedoptions);
+        $("#yahoo_jp_international").rss("https://news.yahoo.co.jp/pickup/world/rss.xml", feedoptions);
+        $("#solidot").rss("https://www.solidot.org/index.rss", feedoptions);
     });
     intFunc();
     tFunc();
