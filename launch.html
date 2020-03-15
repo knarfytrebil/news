@@ -51,17 +51,17 @@
             let btitle = ele('p', 'title');
             let bcontent = ele('div', 'rss-feeds', uuid);
             let feed_container = ele('div', 'feed-container');
-            btitle.textContent = '>' + feed.title;
+            btitle.textContent = ' > ' + feed.title;
             console.log(feed.title);
             feed.items.forEach(function(entry) {
                 let p = document.createElement('p');
                 let b = document.createElement('b');
-                b.textContent = "[" + moment(entry.pubDate).fromNow() + "]";
+                b.textContent = " - " + moment(entry.pubDate).fromNow();
                 let a = document.createElement('a');
                 a.textContent = entry.title;
                 a.href = entry.link;
-                p.appendChild(b);
                 p.appendChild(a);
+                p.appendChild(b);
                 feed_container.appendChild(p);
             });
             bcontent.appendChild(feed_container);
