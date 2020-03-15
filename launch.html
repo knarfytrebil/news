@@ -2,35 +2,20 @@
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300&display=swap" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-1.11.0.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-rss/3.3.0/jquery.rss.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.7.5/dist/rss-parser.min.js"></script>
     </head>
     <style> 
         html { background-color: black; } 
         body { margin: 0px; }
-        #time_display {
-            font-size: 20pt;
-            font-family: 'Oxanium', cursive;
-            display: block;
-            text-align: right;
-            position: absolute;
-            width: 100%;
-            top: 5px; 
-            right: 5px;
-            color: gray;
-        }
+        #time_display { font-size: 20pt; font-family: 'Oxanium', cursive; display: block; text-align: right; position: absolute; width: 100%; top: 5px; right: 5px; color: gray; }
         .feed-container p { margin: 0px; }
         .feed-container p b { color: #5e5e5e; }
         .feed-container a { text-decoration: aqua; }
         .feed-container a:link { color: gray; }
         .feed-container a:visited { color: #5e5e5e; }
         .rss-feeds { font-family: 'Oxanium', cursive; margin: 20px; font-size:15px; }
-        .rss_block .title {
-            color: gray;
-            font-family: 'Oxanium', cursive;
-            margin: 20px;
-        }
+        .rss_block .title { color: gray; font-family: 'Oxanium', cursive; margin: 20px; }
     </style> 
     <body>
         <div id="time_display">loading...</div> 
@@ -53,25 +38,43 @@
 
     </body>
     <script>
-    var tVar;
-    var feedoptions = {
+    let tVar;
+    let feedoptions = {
         limit: 10,
         layoutTemplate: "<div class='feed-container'>{entries}</div>",
         entryTemplate: "<p><b>[{date}]</b> <a href='{url}'>{title}</a></p>",
         dateFormat: "MMMM Do YYYY, HH:mm:ss",
     };
+    const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+    let rss_list = [
+        "https://news.yahoo.co.jp/pickup/rss.xml",
+        "https://news.yahoo.co.jp/pickup/domestic/rss.xml", 
+        "https://news.yahoo.co.jp/pickup/world/rss.xml", 
+        "https://www.solidot.org/index.rss"
+    ]
     function tFunc() {
         tVar = setInterval(intFunc, 1000);
     }
     function intFunc() {
         document.getElementById("time_display").innerHTML = Date().toString();
     }
-    jQuery(function($) {
-        $("#yahoo_jp_main").rss("https://news.yahoo.co.jp/pickup/rss.xml", feedoptions);
-        $("#yahoo_jp_domestic").rss("https://news.yahoo.co.jp/pickup/domestic/rss.xml", feedoptions);
-        $("#yahoo_jp_international").rss("https://news.yahoo.co.jp/pickup/world/rss.xml", feedoptions);
-        $("#solidot").rss("https://www.solidot.org/index.rss", feedoptions);
-    });
+    function parse_rss(url) {
+        let parser = new RSSParser();
+        parser.parseURL(CORS_PROXY + url, function(err, feed) {
+            if (err) throw err;
+            console.log(feed.title);
+            feed.items.forEach(function(entry) {
+                console.log(entry.title + ':' + entry.link);
+            });
+        });
+    }
+    rss_list.forEach(parse_rss); 
+    // jQuery(function($) {
+    //     $("#yahoo_jp_main").rss("https://news.yahoo.co.jp/pickup/rss.xml", feedoptions);
+    //     $("#yahoo_jp_domestic").rss("https://news.yahoo.co.jp/pickup/domestic/rss.xml", feedoptions);
+    //     $("#yahoo_jp_international").rss("https://news.yahoo.co.jp/pickup/world/rss.xml", feedoptions);
+    //     $("#solidot").rss("https://www.solidot.org/index.rss", feedoptions);
+    // });
     intFunc();
     tFunc();
     </script>
