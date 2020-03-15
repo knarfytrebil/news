@@ -60,7 +60,8 @@
             let feed_container = ele('div', 'feed-container');
             btitle.textContent = ' > ' + feed.title;
             console.log(feed);
-            feed.items.forEach(function(entry) {
+            let feeds = feed.items.splice(0,10);
+            feeds.forEach(function(entry) {
                 let p = document.createElement('p');
                 let b = document.createElement('b');
                 b.textContent = " - " + moment(entry.isoDate).fromNow();
