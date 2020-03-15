@@ -19,32 +19,9 @@
     </style> 
     <body>
         <div id="time_display">loading...</div> 
-        <div class="rss_block">
-            <p class="title"> > Yahoo Japan Main </p>
-            <div class="rss-feeds" id="yahoo_jp_main"></div>
-        </div>
-        <div class="rss_block">
-            <p class="title"> > Yahoo Japan Domestic </p>
-            <div class="rss-feeds" id="yahoo_jp_domestic"></div>
-        </div>
-        <div class="rss_block">
-            <p class="title"> > Yahoo Japan International </p>
-            <div class="rss-feeds" id="yahoo_jp_international"></div>
-        </div>
-        <div class="rss_block">
-            <p class="title"> > Solidot </p>
-            <div class="rss-feeds" id="solidot"></div>
-        </div>
-
     </body>
     <script>
     let tVar;
-    let feedoptions = {
-        limit: 10,
-        layoutTemplate: "<div class='feed-container'>{entries}</div>",
-        entryTemplate: "<p><b>[{date}]</b> <a href='{url}'>{title}</a></p>",
-        dateFormat: "MMMM Do YYYY, HH:mm:ss",
-    };
     const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
     let rss_list = [
         "https://news.yahoo.co.jp/pickup/rss.xml",
@@ -52,29 +29,49 @@
         "https://news.yahoo.co.jp/pickup/world/rss.xml", 
         "https://www.solidot.org/index.rss"
     ]
-    function tFunc() {
-        tVar = setInterval(intFunc, 1000);
+    function tFunc() { tVar = setInterval(intFunc, 1000); }
+    function intFunc() { document.getElementById("time_display").innerHTML = Date().toString(); }
+    function ele(el, klass, id) {
+        let dom = document.createElement(el);
+        if (klass) { dom.setAttribute('class', klass); }
+        if (id) { dom.setAttribute('id', id); }
+        return dom;
     }
-    function intFunc() {
-        document.getElementById("time_display").innerHTML = Date().toString();
+    function uuidv4() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
     }
     function parse_rss(url) {
         let parser = new RSSParser();
         parser.parseURL(CORS_PROXY + url, function(err, feed) {
             if (err) throw err;
+            let uuid = uuidv4();
+            let box = ele('div', 'rss_block');
+            let btitle = ele('p', 'title');
+            let bcontent = ele('div', 'rss-feeds', uuid);
+            let feed_container = ele('div', 'feed-container');
+            btitle.textContent = '>' + feed.title;
             console.log(feed.title);
             feed.items.forEach(function(entry) {
-                console.log(entry.title + ':' + entry.link);
+                let p = document.createElement('p');
+                let b = document.createElement('b');
+                b.textContent = "[" + moment(entry.pubDate).fromNow() + "]";
+                let a = document.createElement('a');
+                a.textContent = entry.title;
+                a.href = entry.link;
+                p.appendChild(b);
+                p.appendChild(a);
+                feed_container.appendChild(p);
             });
+            bcontent.appendChild(feed_container);
+            box.appendChild(btitle);
+            box.appendChild(bcontent);
+            let body = document.getElementsByTagName('body')[0];
+            body.appendChild(box);
         });
     }
     rss_list.forEach(parse_rss); 
-    // jQuery(function($) {
-    //     $("#yahoo_jp_main").rss("https://news.yahoo.co.jp/pickup/rss.xml", feedoptions);
-    //     $("#yahoo_jp_domestic").rss("https://news.yahoo.co.jp/pickup/domestic/rss.xml", feedoptions);
-    //     $("#yahoo_jp_international").rss("https://news.yahoo.co.jp/pickup/world/rss.xml", feedoptions);
-    //     $("#solidot").rss("https://www.solidot.org/index.rss", feedoptions);
-    // });
     intFunc();
     tFunc();
     </script>
